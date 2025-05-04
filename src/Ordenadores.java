@@ -4,119 +4,124 @@ public class Ordenadores {
 
     // QUICK SORT
     public static void quickSort(int[] vetor, int inicio, int fim) {
-        if (inicio < fim) {
-            int pivo = dividir(vetor, inicio, fim);
-            quickSort(vetor, inicio, pivo - 1);
-            quickSort(vetor, pivo + 1, fim);
+        if (inicio < fim) {                            // O(1)
+            int pivo = dividir(vetor, inicio, fim);   // O(n) no pior caso
+            quickSort(vetor, inicio, pivo - 1);       // Recursão - O(log n) chamadas
+            quickSort(vetor, pivo + 1, fim);          // Recursão - O(log n) chamadas
         }
-    }
+    }    
 
     private static int dividir(int[] vetor, int inicio, int fim) {
-        int pivo = vetor[fim];
-        int i = inicio - 1;
-
-        for (int j = inicio; j < fim; j++) {
-            if (vetor[j] <= pivo) {
-                i++;
-                trocar(vetor, i, j);
+        int pivo = vetor[fim];                        // O(1)
+        int i = inicio - 1;                           // O(1)
+    
+        for (int j = inicio; j < fim; j++) {          // O(n)
+            if (vetor[j] <= pivo) {                   // O(1)
+                i++;                                  // O(1)
+                trocar(vetor, i, j);                  // O(1)
             }
         }
-
-        trocar(vetor, i + 1, fim);
-        return i + 1;
+    
+        trocar(vetor, i + 1, fim);                    // O(1)
+        return i + 1;                                 // O(1)
     }
+
 
     // HEAP SORT
     public static void heapSort(int[] vetor) {
-        int n = vetor.length;
-
-        for (int i = n / 2 - 1; i >= 0; i--)
-            ajustarHeap(vetor, n, i);
-
-        for (int i = n - 1; i > 0; i--) {
-            trocar(vetor, 0, i);
-            ajustarHeap(vetor, i, 0);
+        int n = vetor.length;                         // O(1)
+    
+        for (int i = n / 2 - 1; i >= 0; i--)          // O(n)
+            ajustarHeap(vetor, n, i);                 // O(log n)
+    
+        for (int i = n - 1; i > 0; i--) {             // O(n)
+            trocar(vetor, 0, i);                      // O(1)
+            ajustarHeap(vetor, i, 0);                 // O(log n)
         }
-    }
+    }    
 
     private static void ajustarHeap(int[] vetor, int n, int i) {
-        int maior = i;
-        int esquerda = 2 * i + 1;
-        int direita = 2 * i + 2;
-
-        if (esquerda < n && vetor[esquerda] > vetor[maior])
+        int maior = i;                                // O(1)
+        int esquerda = 2 * i + 1;                     // O(1)
+        int direita = 2 * i + 2;                      // O(1)
+    
+        if (esquerda < n && vetor[esquerda] > vetor[maior])  // O(1)
             maior = esquerda;
-
-        if (direita < n && vetor[direita] > vetor[maior])
+    
+        if (direita < n && vetor[direita] > vetor[maior])    // O(1)
             maior = direita;
-
+    
         if (maior != i) {
-            trocar(vetor, i, maior);
-            ajustarHeap(vetor, n, maior);
+            trocar(vetor, i, maior);                  // O(1)
+            ajustarHeap(vetor, n, maior);             // Recursão O(log n)
         }
     }
+
 
     // SELECTION SORT
     public static void selectionSort(int[] vetor) {
-        int n = vetor.length;
-        for (int i = 0; i < n - 1; i++) {
-            int menor = i;
-            for (int j = i + 1; j < n; j++) {
-                if (vetor[j] < vetor[menor])
-                    menor = j;
+        int n = vetor.length;                         // O(1)
+        for (int i = 0; i < n - 1; i++) {             // O(n)
+            int menor = i;                            // O(1)
+            for (int j = i + 1; j < n; j++) {         // O(n)
+                if (vetor[j] < vetor[menor])          // O(1)
+                    menor = j;                        // O(1)
             }
-            trocar(vetor, i, menor);
+            trocar(vetor, i, menor);                  // O(1)
         }
     }
 
     // COUNTING SORT (somente inteiros >= 0)
     public static void countingSort(int[] vetor) {
-        int maior = Arrays.stream(vetor).max().getAsInt();
-        int[] contagem = new int[maior + 1];
-        int[] saida = new int[vetor.length];
-
-        for (int num : vetor)
-            contagem[num]++;
-
-        for (int i = 1; i < contagem.length; i++)
-            contagem[i] += contagem[i - 1];
-
-        for (int i = vetor.length - 1; i >= 0; i--) {
-            saida[contagem[vetor[i]] - 1] = vetor[i];
-            contagem[vetor[i]]--;
+        int maior = Arrays.stream(vetor).max().getAsInt(); // O(n)
+        int[] contagem = new int[maior + 1];               // O(k)
+        int[] saida = new int[vetor.length];               // O(n)
+    
+        for (int num : vetor)                              // O(n)
+            contagem[num]++;                               // O(1)
+    
+        for (int i = 1; i < contagem.length; i++)          // O(k)
+            contagem[i] += contagem[i - 1];                // O(1)
+    
+        for (int i = vetor.length - 1; i >= 0; i--) {       // O(n)
+            saida[contagem[vetor[i]] - 1] = vetor[i];       // O(1)
+            contagem[vetor[i]]--;                          // O(1)
         }
-
-        System.arraycopy(saida, 0, vetor, 0, vetor.length);
+    
+        System.arraycopy(saida, 0, vetor, 0, vetor.length); // O(n)
     }
+    
 
     // BUCKET SORT (para números entre 0 e 1)
     public static void bucketSort(float[] vetor) {
-        int n = vetor.length;
-        List<Float>[] baldes = new ArrayList[n];
-
-        for (int i = 0; i < n; i++)
-            baldes[i] = new ArrayList<>();
-
-        for (float num : vetor) {
-            int indice = (int) (num * n);
-            baldes[indice].add(num);
+        int n = vetor.length;                             // O(1)
+        List<Float>[] baldes = new ArrayList[n];          // O(n)
+    
+        for (int i = 0; i < n; i++)                       // O(n)
+            baldes[i] = new ArrayList<>();                // O(1)
+    
+        for (float num : vetor) {                         // O(n)
+            int indice = (int) (num * n);                 // O(1)
+            baldes[indice].add(num);                      // O(1)
         }
-
-        for (List<Float> balde : baldes)
-            Collections.sort(balde);
-
+    
+        for (List<Float> balde : baldes)                  // O(n)
+            Collections.sort(balde);                      // O(k log k)
+    
         int k = 0;
-        for (List<Float> balde : baldes)
-            for (float num : balde)
-                vetor[k++] = num;
+        for (List<Float> balde : baldes)                  // O(n)
+            for (float num : balde)                       // O(n)
+                vetor[k++] = num;                         // O(1)
     }
+    
 
     // Função auxiliar para trocar elementos
     private static void trocar(int[] vetor, int i, int j) {
-        int temp = vetor[i];
-        vetor[i] = vetor[j];
-        vetor[j] = temp;
+        int temp = vetor[i];      // O(1)
+        vetor[i] = vetor[j];      // O(1)
+        vetor[j] = temp;          // O(1)
     }
+    
 
     // Teste dos algoritmos
     public static void main(String[] args) {
